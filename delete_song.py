@@ -6,13 +6,14 @@ console = Console()
 
 def main():
     gd_song_path = r"C:\Users\User\AppData\Local\GeometryDash"
-    filename = sys.argv[1]
+    filenames = sys.argv[1:]
 
-    try:
-        os.remove(f"{gd_song_path}\\{filename}")
-        console.print(f"Deleted '{filename}' successfuly", style="bold green", highlight=False)
-    except FileNotFoundError:
-        console.print(f"'{filename}' does not exist!", style="bold red", highlight=False)    
+    for filename in filenames:
+        try:
+            os.remove(f"{gd_song_path}\\{filename}")
+            console.print(f"Deleted '{filename}' successfuly", style="bold green", highlight=False)
+        except FileNotFoundError:
+            console.print(f"'{filename}' does not exist!", style="bold red", highlight=False)    
 
 if __name__ == '__main__':
     main()
