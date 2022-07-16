@@ -1,79 +1,84 @@
-import pafy
-import os, glob
-import subprocess
-import sys
-import shutil
-from colorama import Fore
-from rich.console import Console
+import pafy #Used for finging and dowloading the desired YouTube videos
+import os, glob #Used for renaming and searching for files
+import subprocess #Used for executing command line commands
+import sys #Used for accessing command line arguements 
+import shutil #Used for moving files between directories
+from rich.console import Console #Used for customazation of the terminal
 
 console = Console()
 
-#Variables:
-gd_song_path = r"C:\Users\User\AppData\Local\GeometryDash"
-current_path = os.getcwd()
-url = str(sys.argv[1])
-song_id = str(sys.argv[2])
+#Move the new mp3 file to the "Geomtry Dash" folder that contains all the related songs
+def Move_to_gd(song_id, current_path, gd_song_path):
+    os.chdir(current_path) #Change directory into the current_path
+    if f"{song_id}.mp3" in glob.glob("*.mp3"): #Check if the song already exists in the current_path
+        shutil.move(f"{song_id}.mp3", gd_song_path) #Will move it to gd_song_path
 
-def Move_to_gd(filename):
-    #Move the new mp3 file to the "Geomtry Dash" folder that contains all the related songs
-    os.chdir(current_path)
-    if filename + ".mp3" in glob.glob("*.mp3"):
-        shutil.move(f"{filename}.mp3", gd_song_path)
-
-        print("\n")
-        console.print(f"MOVED YOUR SONG TO {gd_song_path}, AS: {filename}.mp3", style="bold green")
-    else:
-        print("\n")
-        console.print(f"'{filename}.mp3' WAS NOT FOUND IN THE CURRENT DIRECTORY: {current_path}", style="bold red")
+        #Print success message
+        console.print(f"MOVED YOUR SONG TO {gd_song_path}, AS: {song_id}.mp3", style="bold green")
+    else: #Will print an error message
+        console.print(f"'{song_id}.mp3' WAS NOT FOUND IN THE CURRENT DIRECTORY: {current_path}", style="bold red")
 
     
-
-def Rename_existing(filename):
-    #Renames the existing file at "gd_song_path"
+#Renames the existing file at "gd_song_path"
+def Rename_existing(song_id, gd_song_path):
     try:
-        os.rename(f"{gd_song_path}\\{filename}.mp3", f"{gd_song_path}\\{filename}-original.mp3")
-
-        print("\n")
-        console.print(f"RENAMED THE ORIGINAL FILE AS: {filename}-original.mp3", style="bold green")
-    except FileExistsError as e:
-        print("\n")
-        console.print(f"'{filename}-original.mp3' ALREADY EXISTS IN: {gd_song_path}.", style="bold red")
-
-def Replace(filename):
-    os.chdir(gd_song_path)
-    if filename + ".mp3" in glob.glob("*.mp3"):
-        Rename_existing(filename)
+        #Will rename the Newgrounds.com song so that it doesn't get lost
+        os.rename(f"{gd_song_path}\\{song_id}.mp3", f"{gd_song_path}\\{song_id}-original.mp3")
         
-        Move_to_gd(filename)
-    else:
-        Move_to_gd(filename)
+        #Will print simple success message
+        console.print(f"RENAMED THE ORIGINAL FILE AS: {song_id}-original.mp3", style="bold green")
+    except FileExistsError:#Will print simple error message
+        console.print(f"'{song_id}-original.mp3' ALREADY EXISTS IN: {gd_song_path}.", style="bold red")
 
-def Download():
-    #Identify and donwload the song:
-    video = pafy.new(url)
+def Replace(song_id, gd_song_path, current_path):
+    os.chdir(gd_song_path) #Change directory into gd_song_path 
 
-    print("\n")
+    #Wil check if file exists in in gd_song_path and act acordingly
+    if f"{song_id}.mp3" in glob.glob("*.mp3"):
+        Rename_existing(song_id, gd_song_path)
+        
+        Move_to_gd(song_id, current_path, gd_song_path)
+    else:#Will just move it
+        Move_to_gd(song_id, current_path, gd_song_path)
+
+#Will identify and donwload the song:
+def Download(url, current_path):
+    video = pafy.new(url) #Search for the file
+
+    #simple success message
     console.print(f"FOUND: {video.title}", style="bold green")
 
-    audio = video.getbestaudio()
-    os.chdir(current_path)
-    audio.download()
+    audio = video.getbestaudio()#Get the best available audio
+    os.chdir(current_path) #Change directory to current_path
+    audio.download() #Download the audio
 
     return video
 
-def Convert_to_mp3(video):
-    #Convert the song from webm to mp3 using ffmpeg
-    subprocess.run(["ffmpeg", "-i", f"{video.title}.webm", f"{song_id}.mp3"], shell=True)
+#Convert the song from webm to mp3 using ffmpeg
+def Convert_to_mp3(video, song_id):
+    # ffmpeg is a command line tool deticated to converting video and audio files
 
+    # Will use the ffmpeg environment variable in order to convert the dowloaded audio from Download()
+    # to an mp3 file that will be recognized by the game 
+    subprocess.run(["ffmpeg", "-i", f"{video.title}.webm", f"{song_id}.mp3"], shell=True) #this code will execute the command
+
+    #simple success message
     console.print(f"Converted {video.title}.webm to 'mp3'", style="bold green")
 
 
 def main():
-    video = Download()
-    Convert_to_mp3(video)
-    Replace(song_id)
 
-    os.remove(video.title + ".webm")
+    #Variables:
+    gd_song_path = r"C:\Users\User\AppData\Local\GeometryDash"
+    current_path = os.getcwd()
+    url = sys.argv[1] #Desired song
+    song_id = sys.argv[2] #Provided song id
+
+    video = Download(url, current_path)
+    Convert_to_mp3(video, song_id)
+    Replace(song_id, gd_song_path, current_path)
+
+    os.remove(video.title + ".webm") #Will delete the initial audio file so that is doesn't take up space
 
 if __name__ == '__main__':
     main()
