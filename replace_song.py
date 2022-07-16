@@ -63,7 +63,7 @@ def Download():
 
 def Convert_to_mp3(video):
     #Convert the song from webm to mp3 using ffmpeg
-    subprocess.run([r"C:\FFMPEG\ffmpeg", "-i", f"{video.title}.webm", f"{song_id}.mp3"], shell=True)
+    subprocess.run(["ffmpeg", "-i", f"{video.title}.webm", f"{song_id}.mp3"], shell=True)
 
     console.print(f"Converted {video.title}.webm to 'mp3'", style="bold green")
 
