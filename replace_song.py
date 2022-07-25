@@ -17,7 +17,7 @@ def Move_to_gd(song_id, current_path, gd_song_path):
             #Print success message
             console.print(f"Moved your song to: {gd_song_path}", style="bright_black", highlight=False)
         except shutil.Error as e: #Handle latter
-            print(e)
+            print("e")
 
 def overwrite_existing(song_id, gd_song_path):
     console.print(f"Overwriting...", style="yellow")
@@ -54,6 +54,7 @@ def Rename_existing(song_id, current_path ,gd_song_path):
             dont_overwrite(song_id, current_path)
         else:
             console.print(f"Invalid Input! Enter: y (yes) or n (no).", style="bold red")
+            Rename_existing(song_id, current_path ,gd_song_path)
 
 
 def Replace(song_id, gd_song_path, current_path):
