@@ -4,17 +4,9 @@ from subprocess import Popen
 from glob import glob
 from os import chdir
 
-def open(gd_song_path):
+
+def open_directory(gd_song_path):
     chdir(gd_song_path)
-    song_list = glob("*.mp3")
+    song_list = glob("*")
 
     Popen(f'explorer /select,"{gd_song_path}\{song_list[0]}"')
-
-def main():
-    gd_song_path = r"C:\Users\User\AppData\Local\GeometryDash"
-    
-    open(gd_song_path)
-
-
-if __name__ == '__main__':
-    main()
