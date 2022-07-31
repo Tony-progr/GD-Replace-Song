@@ -3,7 +3,7 @@ This is a CLI tool writen in python that manipulates the game files of Geometry 
 the players a lot of time and prevents them from doing simple but boring and tedious tasks. Keep reading in order to understand how is this useful.
 
 ## Why is it useful?
-Geometry dash is a music-based platformer game, wich means that music plays a huge role in the experience of the player. The game (apart from the 21 "main songs" that
+Geometry dash is a music-based platformer game, which means that music plays a huge role in the experience of the player. The game (apart from the 21 "main songs" that
 are installed along with the game) uses [Newgrounds](https://www.newgrounds.com/) as the main source of music for players to use in-game. However, [Newgrounds](https://www.newgrounds.com/) doesn't have a big enough music
 selection to satisfy the comunity, so palyers download songs from [YouTube](https://www.youtube.com/) and then "import" them into the game by manipulating the game files. This process is done
 manually and is rahter tedious. This tool aims towards automating this process and leting the players enjoy the game.
@@ -22,6 +22,8 @@ file (using ffmpeg) since that is the only format the the game is able to read. 
 recognizes it as the original.
 2. check_song.py: Given a song ID or a spesific arguement. Will print every file inside the 'Geometry Dash' folder that matches the ID/arguemnet.
 3. delete_song.py: Given a filename (example: '190874.mp3'). Will delete the spesified file if it exists.
+4. revert_song.py: Given a filename (example: '500.mp3'). Will undo all of the changes made by replace_song.py. It will remove the custom song that the user specified and it will revert back to the original.
+5. directory_song.py: Running this script will simply open in file explorer the folder that stores all of the songs used in-game.
 
 ## How to use:
 
@@ -35,3 +37,5 @@ After dowloading the scripts, this is how you use each script. (inside your term
 (a valid arguement is -a which prints every mp3 file)
 3. delete_song.py: `delete_song.py {filename}`
 (use check_song.py to see all files)
+4. revert_song.py: `revert_song.py {filename}`
+5. directory_song.py: `directory_song.py` (no arguements needed)
