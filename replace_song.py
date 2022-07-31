@@ -1,9 +1,9 @@
-import pafy #Used for finging and dowloading the desired YouTube videos
-import os, glob #Used for renaming and searching for files
-import subprocess #Used for executing command line commands
-import sys #Used for accessing command line arguements 
-import shutil #Used for moving files
-from rich.console import Console #Used for customazation of the terminal
+import pafy
+import os, glob
+import subprocess
+import sys 
+import shutil
+from rich.console import Console
 
 console = Console()
 
@@ -31,8 +31,6 @@ def dont_overwrite(song_id, current_path):
 
     os.remove(f"{current_path}/{song_id}.mp3")
     console.print(f"Removed {song_id}.mp3 from {current_path}.", style="bright_black", highlight=False)
-
-
 
 #Renames the existing file at "gd_song_path"
 def Rename_existing(song_id, current_path ,gd_song_path):
@@ -94,16 +92,14 @@ def Convert_to_mp3(video, song_id):
     console.print(f"Converted: {video.title}.webm to 'mp3'", style="bright_black", highlight=False)
 
 
-def main():
-    #Variables:
-    gd_song_path = r"C:\Users\User\AppData\Local\GeometryDash"
+def new_replacement(gd_song_path, song_url, original_song_id):
+
     current_path = os.getcwd()
-    url = sys.argv[1] #Desired song
-    song_id = sys.argv[2] #Provided song id
+
     try:
-        video = Download(url, current_path)
-        Convert_to_mp3(video, song_id)
-        Replace(song_id, gd_song_path, current_path)
+        video = Download(song_url, current_path)
+        Convert_to_mp3(video, original_song_id)
+        Replace(original_song_id, gd_song_path, current_path)
 
         print("\n")
         console.print(f"The operation was successful!", style="bold green")
@@ -114,7 +110,6 @@ def main():
             #Will delete the initial audio file so that is doesn't take up space
             os.remove(video.title + ".webm") 
         except UnboundLocalError:
+            #If this error occures then the ".webm" file was 
+            #propably never created | | | Will be handled later
             pass
-        
-if __name__ == '__main__':
-    main()
